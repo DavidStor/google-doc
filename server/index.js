@@ -1,8 +1,14 @@
-import http from 'http';
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+io.on('connection', function (socket) {
+  socket.on('login', function (data, next) {
+    console.log('LOGIN REQUEST', data)
+    const {user, pass} = data;
 
-http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(1337, '127.0.0.1');
+    if(user === 'demi' && pass === 'demi') next({loggedIn: true})
+    else next({loggedIn: false})
+  });
+});
 
-console.log('Server running at http://127.0.0.1:1337/');
+server.listen(1337);
