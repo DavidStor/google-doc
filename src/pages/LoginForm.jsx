@@ -8,7 +8,7 @@ class LoginForm extends React.Component {
 
   handleLogin() {
     let {login, password} = this.state;
-    this.props.socket.emit('login', {user: login, pass: password}, function(result){
+    this.props.socket.emit('login', {user: login, pass: password}, (result) => {
       console.log('login result:', result);
       if(result.err == null && result.user) {
         this.props.app.setState({user: result.user});
