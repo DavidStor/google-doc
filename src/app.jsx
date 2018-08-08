@@ -14,14 +14,11 @@ export default class App extends React.Component {
       mode: 'login',
       user: null
     }
-  }
-
-  componentDidMount() {
     this.socket = io('http://localhost:1337');
     this.socket.on('connect', function(){console.log('ws connect')});
     this.socket.on('disconnect', function(){console.log('ws disconnect')});
-
   }
+
 
   onLogin() {
     this.socket.emit('login', {user: this.state.login, pass: this.state.password}, function(result){
