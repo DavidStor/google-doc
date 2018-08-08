@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
 import createStyles from 'draft-js-custom-styles';
 import io from 'socket.io-client';
 import FontPicker from 'font-picker-react';
@@ -50,6 +50,7 @@ class Document extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       activeFont: 'Open Sans'
+      //document?
     };
     this.onChange = (editorState) => { this.setState({editorState})};
   }
@@ -91,10 +92,35 @@ class Document extends React.Component {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'ordered-list-item'));
   }
 
+  //  this.socket.emit('login', {user: this.state.login, pass: this.state.password}, function(result){
+  //     console.log('login result:', result);
+  //     if(result.err == null && result.user) {
+  //       this.setState({user: result.user});
+  //     }
+  //   });
+
+// _onSaveClick(e){
+//   e.preventDefault()
+//   let contentState = this.state.editorState.getCurrentContent()
+//   let content = convertToRaw(contentState);
+//   console.log("content:", content);
+//   this.socket.emit('saveDoc', {document: this.state.document}, function(result){
+//     if (result.err == null && result.document){
+//       this.setState({document: result.document}) // need to add a state variable
+//     }
+//   })
+// }
+//   _onGoHomeClick(e){
+//     e.preventDefault(e)
+//     // render document home page
+//   }
+
   render() {
     return (
       <div style={{backgroundColor: "#eee", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: 'center'}}>
        <div>
+         <button className='btn' onMouseDown={(e) => this._onSaveClick(e)}>Save</button>
+         <button className='btn' onMouseDown={(e) => this._onGoHomeClick(e)}>Doc Home</button><br/>
          <button className="btn" onMouseDown={(e) => this._onBoldClick(e)}>Bold</button>
          <button className="btn" onMouseDown={(e) => this._onIClick(e)}>Italics</button>
          <button className="btn" onMouseDown={(e) => this._onUClick(e)}>Underline</button>
@@ -108,7 +134,7 @@ class Document extends React.Component {
            activeFont={this.state.activeFont}
            onChange={nextFont => this.setState({ activeFont: nextFont.family })}
          />
-       </div>
+         </div>
       <Paper style={{height: 842, width: 1000, margin: 40}} zDepth={2}>
         <div className="apply-font" style={{fontSize: 50}}>
           <Editor
