@@ -1,10 +1,18 @@
-import React from 'react';
+import React, {Component} from 'react';
+import AppBar from 'material-ui/AppBar';
+import Paper from 'material-ui/Paper';
+
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 
 class LoginForm extends React.Component {
-  state = {
-    login: '',
-    password: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      login: '',
+      password: ''
+    };
+  }
 
   handleLogin() {
     let {login, password} = this.state;
@@ -22,23 +30,34 @@ class LoginForm extends React.Component {
 
   render() {
     return (
-      <div style={styles}>
-        <input type="text" value={this.state.login} onChange={(e) => this.setState({login: e.target.value})} placeholder="Username"/>
-        <input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} placeholder="Password"/>
-        <button onClick={() => this.handleLogin()}>Login</button>
-        <button onClick={() => this.redirectRegistration()}>Register</button>
+      <div style={{height: "100%", width: "100%", backgroundColor: "#eee",  display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+        {/* <AppBar title="Login"/> */}
+          <Paper zDepth={2}>
+            <AppBar title="Login" style={{backgroundColor: "#536dfe", fontFamily: "Segoe UI"}}/>
+            <div style={{padding: 30}}>
+          <TextField
+            hintText="Username"
+            onChange={(e) => this.setState({login: e.target.value})}
+            style={{fontFamily: "Trebuchet MS"}}
+          />
+        <br/>
+          <TextField
+            hintText="Password"
+            onChange={(e) => this.setState({password: e.target.value})}
+            style={{fontFamily: "Trebuchet MS"}}
+          />
+          <br/>
+          <div style={{display: "flex", justifyContent: "center"}}>
+            <FlatButton style={{margin: 10, fontFamily: "Trebuchet MS", color: "#536dfe"}} label="GO" onClick={() => this.handleLogin()}/>
+          </div>
+          <div>
+            <a onClick={() => this.props.app.setState({mode: "register"})} style={{display: "flex", justifyContent: "center", color: "#536dfe"}}>Don't have an account yet?</a>
+          </div>
+        </div>
+        </Paper>
       </div>
-    )
+    );
   }
 }
-const styles = {
-  backgroundColor: "#eee",
-  padding: 20,
-  borderRadius: 10,
-  width: 300,
-  height: 200,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center"
-  }
+
 export default LoginForm;
