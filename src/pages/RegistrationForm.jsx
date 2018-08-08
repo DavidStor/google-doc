@@ -8,7 +8,7 @@ class RegistrationForm extends React.Component {
 
   handleRegistration() {
     let {login, password} = this.state;
-    this.props.socket.emit('register', {user: login, pass: password}, function(result){
+    this.props.socket.emit('register', {user: login, pass: password}, (result) => {
       console.log('register result:', result);
       if(result.err == null && result.user) {
         console.log("creating new user");
