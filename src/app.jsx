@@ -72,11 +72,11 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    const socket = io('http://localhost:1337');
-    socket.on('connect', function(){console.log('ws connect')});
-    socket.on('disconnect', function(){console.log('ws disconnect')});
+    this.socket = io('http://localhost:1337');
+    this.socket.on('connect', function(){console.log('ws connect')});
+    this.socket.on('disconnect', function(){console.log('ws disconnect')});
 
-    socket.emit('login', {user:'demi', pass:'demi'}, function(result){
+    this.socket.emit('login', {user:'demi', pass:'demi'}, function(result){
       console.log('login result:', result);
     });
   }
