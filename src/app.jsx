@@ -1,8 +1,9 @@
-import React, {Component, View} from 'react';
-import Menu from 'material-ui/Menu';
+import React, {Component, Button} from 'react';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import createStyles from 'draft-js-custom-styles';
 import io from 'socket.io-client';
+import FontPicker from 'font-picker-react';
+
 
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -12,54 +13,8 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import Paper from 'material-ui/Paper';
 
-class ToolbarExamplesSimple extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 3,
-    };
-  }
-
-  handleChange = (event, index, value) => this.setState({value});
-
-  render() {
-    return (
-      <div>
-      <Toolbar>
-        <ToolbarGroup firstChild={true}>
-          <DropDownMenu value={this.state.value} onChange={this.handleChange}>
-            <MenuItem value={1} primaryText="All Broadcasts" />
-            <MenuItem value={2} primaryText="All Voice" />
-            <MenuItem value={3} primaryText="All Text" />
-            <MenuItem value={4} primaryText="Complete Voice" />
-            <MenuItem value={5} primaryText="Complete Text" />
-            <MenuItem value={6} primaryText="Active Voice" />
-            <MenuItem value={7} primaryText="Active Text" />
-          </DropDownMenu>
-        </ToolbarGroup>
-        <ToolbarGroup>
-          <ToolbarTitle text="Options" />
-          <FontIcon className="muidocs-icon-custom-sort" />
-          <ToolbarSeparator />
-          <RaisedButton label="Create Broadcast" primary={true} />
-          <IconMenu
-            iconButtonElement={
-              <IconButton touch={true}>
-                <NavigationExpandMoreIcon />
-              </IconButton>
-            }
-          >
-            <MenuItem primaryText="Download" />
-            <MenuItem primaryText="More Info" />
-          </IconMenu>
-        </ToolbarGroup>
-      </Toolbar>
-    </div>
-    );
-  }
-}
 
 /* Define custom styles */
 const customStyleMap = {
@@ -79,12 +34,6 @@ const customStyleMap = {
 };
 
 /* Have draft-js-custom-styles build help functions for toggling font-size, color */
-const style = {
- customWidth: {
-   width: 200,
- },
-};
-
 const {
   styles,
   customStyleFn,
@@ -111,8 +60,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      show: false,
-      value: 1
+      activeFont: 'Open Sans'
     };
     this.onChange = (editorState) => { this.setState({editorState})};
   }
@@ -133,10 +81,27 @@ export default class App extends React.Component {
     e.preventDefault()
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'text-align-center'));
   }
-  _onSizeClick(e, size) {
-    e.preventDefault()
-    this.onChange(styles['fontSize'].toggle(this.state.editorState, size))
+
+  _onRightClick(e) {
+    e.preventDefault();
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'text-align-right'));
   }
+
+  _onLeftClick(e) {
+    e.preventDefault();
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'text-align-left'));
+  }
+
+  _onBulletListClick(e) {
+    e.preventDefault();
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'unordered-list-item'));
+  }
+
+  _onNumberedListClick(e) {
+    e.preventDefault();
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'ordered-list-item'));
+  }
+
 
   componentDidMount() {
     const socket = io('http://localhost:1337');
@@ -148,40 +113,38 @@ export default class App extends React.Component {
     });
   }
 
-  showMenu(e) {
-    e.preventDefault();
-    this.setState({show: true}, () => console.log(this.state.show));
-  }
-
-  handleChange(event, index, value){
-    console.log(event, index, value)
-    // this.setState({value: e.target.value});
-  }
 
   render() {
     return (
-      <Toolbar>
-        <ToolbarGroup firstChild={true}>
-        <RaisedButton label="Bold" primary={true} onMouseDown={(e) => this._onBoldClick(e)} primary={true}/>
-        <RaisedButton label="Underline" primary={true} onMouseDown={(e) => this._onUClick(e)} primary={true}/>
-        <RaisedButton label="Italics" primary={true} onMouseDown={(e) => this._onIClick(e)} primary={true}/>
-        <RaisedButton label="Center" primary={true} onMouseDown={(e) => this._onCenterClick(e)} primary={true}/>
-        <DropDownMenu value={this.state.value} onChange={(e, i, v) => this.handleChange(e, i, v)}>
-          <MenuItem value={1} primaryText="10px"/>
-          <MenuItem value={2} primaryText="12px"/>
-
-          {/* {['10px','12px'].map((item, index) => <MenuItem value={index} primaryText={item}/>)} */}
-        </DropDownMenu>
-        <Editor
-          editorState={this.state.editorState}
-          customStyleMap={customStyleMap}
-          customStyleFn={customStyleFn}
-          blockStyleFn={getBlockStyle}
-          onChange={this.onChange}
-        />
-      </ToolbarGroup>
-      </Toolbar>
-
+      <div style={{backgroundColor: "#eee", display: "flex", flexDirection: "column", alignItems: "center"}}>
+       <div>
+         <button className="btn" onMouseDown={(e) => this._onBoldClick(e)}>Bold</button>
+         <button className="btn" onMouseDown={(e) => this._onIClick(e)}>Italics</button>
+         <button className="btn" onMouseDown={(e) => this._onUClick(e)}>Underline</button>
+         <button className="btn" onMouseDown={(e) => this._onLeftClick(e)}>Left</button>
+         <button className="btn" onMouseDown={(e) => this._onCenterClick(e)}>Center</button>
+         <button className="btn" onMouseDown={(e) => this._onRightClick(e)}>Right</button>
+         <button className="btn" onMouseDown={(e) => this._onBulletListClick(e)}>Bullet List</button>
+         <button className="btn" onMouseDown={(e) => this._onNumberedListClick(e)}>Numbered List</button>
+         <FontPicker
+           apiKey="AIzaSyAEJbLvfLVpSM2CB66g_K4iOLjospEG_rY"
+           activeFont={this.state.activeFont}
+           onChange={nextFont => this.setState({ activeFont: nextFont.family })}
+         />
+       </div>
+      <Paper style={{height: 842, width: 1000, margin: 40}} zDepth={2}>
+        <div className="apply-font" style={{fontSize: 50}}>
+          <Editor
+            className="apply-font"
+            editorState={this.state.editorState}
+            customStyleMap={customStyleMap}
+            customStyleFn={customStyleFn}
+            blockStyleFn={getBlockStyle}
+            onChange={this.onChange}
+            />
+          </div>
+       </Paper>
+     </div>
     );
   }
 }
