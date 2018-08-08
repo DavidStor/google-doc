@@ -27,7 +27,8 @@ var documentSchema = new mongoose.Schema({
         ref: 'User'
     }],
     title: String,
-    content: String
+    content: String,
+    editDate: Date
 });
 
 export const User = mongoose.model('User', userSchema);
