@@ -3,6 +3,8 @@ import io from 'socket.io-client';
 //import Editor from './editor';
 import LoginForm from './pages/LoginForm';
 import RegistrationForm from './pages/RegistrationForm';
+import DocumentList from './pages/DocumentList';
+
 
 
 export default class App extends React.Component {
@@ -66,7 +68,7 @@ export default class App extends React.Component {
 //   }
 if(this.state.user) {
   return (
-    <AllDocuments user={this.state.user} socket={this.socket} app={this}/>
+    <DocumentList user={this.state.user} socket={this.socket} app={this}/>
   )
 } else if(this.state.mode == "login") {
   return (
