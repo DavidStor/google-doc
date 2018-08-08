@@ -1,24 +1,38 @@
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var sta = require('connect-mongo');
-var MongoStore = sta(session);
+import {User } from './models/models';
 
-
-mongoose.connection.on('connected',function(){
-    console.log('MongoDB Connected')
-})
-mongoose.connect(process.env.MONGODB_URI)
 
 io.on('connection', function (socket) {
   socket.on('login', function (data, next) {
     console.log('LOGIN REQUEST', data)
     const {user, pass} = data;
 
-    User.findOne({username: user, password: pass})
+    User.findOne({username: user, password: pass}).then(doc => {
+        if(doc) {
+            next({user: doc, err: null});
+        } else {
+            next({user: null, err: null});  
+        }
 
-    if(user === 'demi' && pass === 'demi') next({loggedIn: true})
-    else next({loggedIn: false})
+    }).catch(err => {
+        next({err});
+    })  
+  });
+
+  socket.on('register', function (data, next) {
+    console.log('Reg REQUEST', data)
+    const {user, pass} = data;
+
+    var newUser = new User({username: user, password: pass}).save((err, doc) => {
+        
+        if(doc) {
+            next({user: doc, err: err});
+        } else {
+            next({user: null, err: err});  
+        }
+    })
   });
 });
 

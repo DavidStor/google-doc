@@ -30,8 +30,6 @@ var documentSchema = new mongoose.Schema({
     content: String
 });
 
-var User = mongoose.model('User', userSchema);
-var Document = mongoose.model('Document',documentSchema);
+export const User = mongoose.model('User', userSchema);
+export const Document = mongoose.model('Document',documentSchema);
 
-
-export default {User , Document}
