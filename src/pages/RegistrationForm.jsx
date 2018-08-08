@@ -2,24 +2,31 @@ import React from 'react';
 
 class RegistrationForm extends React.Component {
   state = {
-    name: '',
+    login: '',
     password: '',
-    passwordConfirm: ''
   };
 
-  handleRegister() {
-    let {username, password, passwordConfirm} = this.state;
-    console.log(username, password, passwordConfirm);
+  handleRegistration() {
+    let {login, password} = this.state;
+    this.props.socket.emit('register', {user: login, pass: password}, function(result){
+      console.log('register result:', result);
+      if(result.err == null && result.user) {
+        this.props.app.setState({user: result.user});
+      }
+    });
   };
+
+  redirectLogin() {
+    this.props.app.setState({mode: "login"});
+  }
 
   render() {
     return (
       <div style={styles}>
-        <input type="text" value={this.state.username} onChange={(e) => this.setState({username: e.target.value})} placeholder="Username"/>
+        <input type="text" value={this.state.login} onChange={(e) => this.setState({login: e.target.value})} placeholder="Username"/>
         <input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} placeholder="Password"/>
-        <input type="password" value={this.state.passwordConfirm} onChange={(e) => this.setState({passwordConfirm: e.target.value})} placeholder="Confirm password"/>
         <button onClick={() => this.handleRegistration()}>Register</button>
-        <button onClick={() => this.props.redirectLogin()}>Login</button>
+        <button onClick={() => this.redirectLogin()}>Login</button>
       </div>
     );
   }

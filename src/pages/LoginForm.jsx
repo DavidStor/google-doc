@@ -2,22 +2,31 @@ import React from 'react';
 
 class LoginForm extends React.Component {
   state = {
-    name: '',
+    login: '',
     password: ''
   };
 
   handleLogin() {
-    let {username, password} = this.state;
-    console.log(username, password);
+    let {login, password} = this.state;
+    this.props.socket.emit('login', {user: login, pass: password}, function(result){
+      console.log('login result:', result);
+      if(result.err == null && result.user) {
+        this.props.app.setState({user: result.user});
+      }
+    });
   };
+
+  redirectRegistration() {
+    this.props.app.setState({mode: "register"});
+  }
 
   render() {
     return (
       <div style={styles}>
-        <input type="text" value={this.state.username} onChange={(e) => this.setState({username: e.target.value})} placeholder="Username"/>
+        <input type="text" value={this.state.login} onChange={(e) => this.setState({login: e.target.value})} placeholder="Username"/>
         <input type="password" value={this.state.password} onChange={(e) => this.setState({password: e.target.value})} placeholder="Password"/>
         <button onClick={() => this.handleLogin()}>Login</button>
-        <button onClick={() => this.props.redirectRegistration()}>Register</button>
+        <button onClick={() => this.redirectRegistration()}>Register</button>
       </div>
     )
   }

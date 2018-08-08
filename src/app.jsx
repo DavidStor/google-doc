@@ -1,6 +1,9 @@
 import React, {Component, View} from 'react';
 import io from 'socket.io-client';
 //import Editor from './editor';
+import LoginForm from './pages/LoginForm';
+import RegistrationForm from './pages/RegistrationForm';
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -40,27 +43,40 @@ export default class App extends React.Component {
 
   render() {
     //this.props.app.setSTATE9()
-    if(this.state.user) {
-      return ( <Editor user={this.state.user} socket={this.socket} app={this}/>)
-    } else if(this.state.mode == "login") {
-    return (
-    
-      <div>
-      <input value={this.state.login} onChange={(e) => this.setState({login: e.target.value})}></input>
-      <input value={this.state.password} onChange={(e) => this.setState({password: e.target.value})}></input>
-      <button onClick={() => this.onLogin()}>login</button>
-      <button onClick={() => this.setState({mode: "register"})}>Reg</button>
-      </div>
-    );
-  } else if(this.state.mode == "register") {
-return (
-    <div>
-    <input value={this.state.login} onChange={(e) => this.setState({login: e.target.value})}></input>
-    <input value={this.state.password} onChange={(e) => this.setState({password: e.target.value})}></input>
-    <button onClick={() => this.onLogin()}>login</button>
-    <button onClick={() => this.setState({mode: "login"})}>login</button>
-    </div>)
-  }
+//     if(this.state.user) {
+//       return ( <Editor user={this.state.user} socket={this.socket} app={this}/>)
+//     } else if(this.state.mode == "login") {
+//     return (
+//
+//       <div>
+//       <input value={this.state.login} onChange={(e) => this.setState({login: e.target.value})}></input>
+//       <input value={this.state.password} onChange={(e) => this.setState({password: e.target.value})}></input>
+//       <button onClick={() => this.onLogin()}>login</button>
+//       <button onClick={() => this.setState({mode: "register"})}>Reg</button>
+//       </div>
+//     );
+//   } else if(this.state.mode == "register") {
+// return (
+//     <div>
+//     <input value={this.state.login} onChange={(e) => this.setState({login: e.target.value})}></input>
+//     <input value={this.state.password} onChange={(e) => this.setState({password: e.target.value})}></input>
+//     <button onClick={() => this.onLogin()}>login</button>
+//     <button onClick={() => this.setState({mode: "login"})}>login</button>
+//     </div>)
+//   }
+if(this.state.user) {
+  return (
+    <AllDocuments user={this.state.user} socket={this.socket} app={this}/>
+  )
+} else if(this.state.mode == "login") {
+  return (
+    <LoginForm socket={this.socket} app={this}/>
+  )
+} else if(this.state.mode == "register") {
+  return (
+    <RegistrationForm socket={this.socket} app={this}/>
+  )
+}
 
   }
 }
