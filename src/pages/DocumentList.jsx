@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import HomeIcon from 'material-ui/svg-icons/action/home'
-import AddIcon from 'material-ui/svg-icons/action/note-add'
-import ListIcon from 'material-ui/svg-icons/action/list'
-import JoinIcon from 'material-ui/svg-icons/action/backup'
+import AddIcon from 'material-ui/svg-icons/content/add-circle'
+import ListIcon from 'material-ui/svg-icons/editor/format-list-bulleted'
+import JoinIcon from 'material-ui/svg-icons/content/link'
+import LogoutIcon from 'material-ui/svg-icons/action/exit-to-app'
 import TextField from 'material-ui/TextField'
+import {indigo100} from 'material-ui/styles/colors'
 import {Table, TableRow, TableBody, TableHeader, TableHeaderColumn, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton'
 import {Document} from './Document'
@@ -16,7 +18,7 @@ export default class DocumentList extends Component {
   loadDocuments = () => {
     this.props.socket.emit('getDocuments', {}, (res) => {
       if(res.err) return alert('Opps Error')
-      this.setState({ docs: res.docs })
+      this.setState({ docs: res.listDocs })
     })
   }
 
@@ -41,15 +43,17 @@ export default class DocumentList extends Component {
   deleteDoc = (docId) => () => this.props.socket.emit('deleteDocument', {docId}, this.refresh)
   editDoc = (docId) => () => this.props.navigate(Document, {docId})
   tabChange = (tabValue) => () => this.setState({ tabValue })
+  logout(){ this.props.app.setState({user: null})}
 
   render() {
     const {tabValue, docs} = this.state
     return (<div>
 
-      <AppBar title="All Documents" position="static" iconElementLeft={<IconButton><HomeIcon /></IconButton>}>
-        <IconButton onClick={this.tabChange(0)} style={{marginTop: 8}}><AddIcon /></IconButton>
-        <IconButton onClick={this.tabChange(1)} style={{marginTop: 8}}><JoinIcon /></IconButton>
-        <IconButton onClick={this.tabChange(2)} style={{marginTop: 8}}><ListIcon /></IconButton>
+      <AppBar style={{backgroundColor: '#536DFE'}} title="Document Home" position="static" iconElementLeft={<IconButton onClick={this.tabChange(2)}><HomeIcon color={indigo100} /></IconButton>}>
+        <IconButton onClick={this.tabChange(0)} style={{marginTop: 8}}><AddIcon color={indigo100}/></IconButton>
+        <IconButton onClick={this.tabChange(1)} style={{marginTop: 8}}><JoinIcon color={indigo100}/></IconButton>
+        <IconButton style={{marginTop: 8}}><ListIcon color={indigo100} /></IconButton>
+        <IconButton onClick={() => this.logout()} style={{marginTop: 8}}><LogoutIcon color={indigo100} /></IconButton>
       </AppBar>
 
       {tabValue === 0 && <div style={{padding:'20px'}}>

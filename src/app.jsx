@@ -60,19 +60,18 @@ export default class App extends React.Component {
 //     <button onClick={() => this.setState({mode: "login"})}>login</button>
 //     </div>)
 //   }
-if(this.state.user) {
-  return (
-    <DocumentList user={this.state.user} socket={this.socket} app={this}/>
-  )
-} else if(this.state.mode == "login") {
-  return (
-    <LoginForm socket={this.socket} app={this}/>
-  )
-} else if(this.state.mode == "register") {
-  return (
-    <RegistrationForm socket={this.socket} app={this}/>
-  )
-}
-
+    if(this.state.user) {
+      return (
+        <div style={{height: "100%"}}><DocumentList user={this.state.user} socket={this.socket} app={this}/></div>
+      )
+    } else if(this.state.mode == "login") {
+      return (
+        <div style={{height: "100%"}}><LoginForm socket={this.socket} app={this}/></div>
+      )
+    } else if(this.state.mode == "register") {
+      return (
+        <div style={{height: "100%"}}><RegistrationForm socket={this.socket} app={this}/></div>
+      )
+    }
   }
 }
