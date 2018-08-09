@@ -43,10 +43,10 @@ export default class DocumentList extends Component {
   onChange = (field) => (e) => this.setState({[field]: e.target.value})
   onCreate = () => this.props.socket.emit('createDocument', {user: this.props.user , name: this.state.docName}, this.refresh)
   onJoin = () => this.props.socket.emit('addDocumentCollaborator', {docId: this.state.docId}, this.refresh)
-  deleteDoc = (docId) => () => this.props.socket.emit('deleteDocument', {docId}, this.refresh)
+  deleteDoc(docId) { console.log('DELETE >>><<<'); this.props.socket.emit('deleteDocument', {docId}, this.refresh)}
   editDoc = (docId) => () => this.props.navigate(Document, {docId})
   tabChange = (tabValue) => () => this.setState({ tabValue })
-  logout(){ this.props.app.setState({user: null})}
+  logout() { this.props.app.setState({user: null})}
 
   render() {
     const {tabValue, docs} = this.state
@@ -74,6 +74,7 @@ export default class DocumentList extends Component {
             <TableHeader>
               <TableRow>
                 <TableHeaderColumn>Name</TableHeaderColumn>
+                <TableHeaderColumn>Author</TableHeaderColumn>
                 <TableHeaderColumn>Share key</TableHeaderColumn>
                 <TableHeaderColumn></TableHeaderColumn>
               </TableRow>
@@ -83,12 +84,15 @@ export default class DocumentList extends Component {
                 return (
                   <TableRow key={doc._id}>
                     <TableRowColumn component="th" scope="row">
-                      {doc.name}
+                      {doc.title}
+                    </TableRowColumn>
+                    <TableRowColumn component="th" scope="row">
+                      {doc.author}
                     </TableRowColumn>
                     <TableRowColumn>{doc._id}</TableRowColumn>
                     <TableRowColumn>
                       <RaisedButton onClick={this.editDoc(doc._id)}>Edit</RaisedButton>
-                      <RaisedButton onClick={this.deleteDoc(doc._id)}>Delete</RaisedButton>
+                      <RaisedButton onClick={() => this.deleteDoc(doc._id)}>Delete</RaisedButton>
                     </TableRowColumn>
                   </TableRow>
                 );

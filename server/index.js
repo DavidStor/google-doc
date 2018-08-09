@@ -40,7 +40,8 @@ io.on('connection', function (socket) {
     const {user} = data;
     
     //look throuh the document that belong to the person
-    //Document.find({collaborators: {$in:[user]} }).then(listDocs => next({listDocs}))
+
+   Document.find({collaborators: {$in:[user]} }).then(listDocs => next({listDocs}))
   });
 
   socket.on('createDocument', function(data, next) {
@@ -59,6 +60,15 @@ io.on('connection', function (socket) {
     User.findById(user , function(err, userObj) {
         userObj.documents.push(newDoc)
     });
+  });
+
+  socket.on('deleteDocument', function(data ,next) {
+      const {docId} = data;
+      Document.findOneAndRemove({_id: docId}, function (err) {
+          if(err) {
+              console.log(err);
+          }
+      });
   });
 });
 
