@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
+import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw} from 'draft-js';
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import HomeIcon from 'material-ui/svg-icons/action/home'
@@ -11,6 +11,8 @@ import io from 'socket.io-client';
 import {indigo100} from 'material-ui/styles/colors'
 import FontPicker from 'font-picker-react';
 import Paper from 'material-ui/Paper';
+import ContentReply from 'material-ui/svg-icons/action/exit-to-app';
+
 
 /* Define custom styles */
 const customStyleMap = {
@@ -56,9 +58,8 @@ class Document extends React.Component {
     super(props);
     // props.doc.content
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.doc.content))),
       activeFont: 'Open Sans'
-      //document?
     };
     this.onChange = (editorState) => { this.setState({editorState})};
   }
@@ -100,24 +101,21 @@ class Document extends React.Component {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'ordered-list-item'));
   }
 
-  //  this.socket.emit('login', {user: this.state.login, pass: this.state.password}, function(result){
-  //     console.log('login result:', result);
-  //     if(result.err == null && result.user) {
-  //       this.setState({user: result.user});
-  //     }
-  //   });
 
-// _onSaveClick(e){
-//   e.preventDefault()
-//   let contentState = this.state.editorState.getCurrentContent()
-//   let content = convertToRaw(contentState);
-//   console.log("content:", content);
-//   this.socket.emit('saveDoc', {document: this.state.document}, function(result){
-//     if (result.err == null && result.document){
-//       this.setState({document: result.document}) // need to add a state variable
-//     }
-//   })
-// }
+
+_onSaveClick(e){
+  e.preventDefault();
+  // let contentState = this.state.editorState.getCurrentContent();
+  // let content = JSON.stringify(convertToRaw(contentState));
+  // console.log("content:",  content);
+
+  // this.socket.emit('saveDoc', {docId: this.state.document._id, content: content}, function(result){
+  //   if (result.err == null && result.document){
+     
+  //     //this.setState({document: result.document}) // need to add a state variable
+  //   }
+  // })
+}
 //   _onGoHomeClick(e){
 //     e.preventDefault(e)
 //     // render document home page

@@ -50,12 +50,10 @@ export default class DocumentList extends Component {
   onJoin() {this.props.socket.emit('addDocumentCollaborator', {docId: this.state.docId, user: this.props.user}, this.refresh)}
   deleteDoc(docId) {this.props.socket.emit('deleteDocument', {docId}, this.refresh)}
   editDoc(doc) { 
-    console.log('JKJDSNSDFKDK', this.props.app.state.mode)
-    this.props.app.setState({mode: 'editor', currentViewDock: doc}, () =>  {
-      console.log('insidde', this.props.app.state.mode)
-    })
-    this.props.app.setState({mode: "editor"});
-    console.log('sdsdfdsfsfsd', this.props.app.state.mode)
+    this.props.socket.emit('loadDoc', {docId: doc._id }, (data) => {
+      this.props.app.setState({mode: 'editor', currentViewDock: data.document});
+    });
+    
 }
   tabChange = (tabValue) => () => this.setState({ tabValue })
   logout() { this.props.app.setState({user: null})}

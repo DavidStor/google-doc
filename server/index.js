@@ -85,6 +85,24 @@ io.on('connection', function (socket) {
           next({err});
       });
   });
+
+  socket.on('loadDoc', function (data, next) {
+    console.log('new Doc REQUEST', data);
+    const {docId} = data;
+
+   Document.findById(docId , function(err, document) {
+    next({err, document})
+   });
+ }); 
+
+  socket.on('saveDoc', function(data, next) {
+    const {docId , content} = data;
+    Document.findById( docId , function(err, doc) {
+        doc.content = content;
+        doc.save();
+        next({err});
+    });
+  });
 });
 
 server.listen(1337);
