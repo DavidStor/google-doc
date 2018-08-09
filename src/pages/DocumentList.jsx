@@ -14,7 +14,7 @@ import {Document} from './Document'
 
 export default class DocumentList extends Component {
   state = {docs:[], tabValue: 2}
-
+  
   loadDocuments = () => {
     this.props.socket.emit('getDocuments', {}, (res) => {
       if(res.err) return alert('Opps Error')
