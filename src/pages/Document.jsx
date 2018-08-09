@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
+import AppBar from 'material-ui/AppBar'
+import IconButton from 'material-ui/IconButton'
+import HomeIcon from 'material-ui/svg-icons/action/home'
+import SaveIcon from 'material-ui/svg-icons/content/save'
+import ShareIcon from 'material-ui/svg-icons/social/share'
+import LogoutIcon from 'material-ui/svg-icons/action/exit-to-app'
 import createStyles from 'draft-js-custom-styles';
 import io from 'socket.io-client';
+import {indigo100} from 'material-ui/styles/colors'
 import FontPicker from 'font-picker-react';
 import Paper from 'material-ui/Paper';
 
@@ -118,6 +125,11 @@ class Document extends React.Component {
   render() {
     return (
       <div style={{backgroundColor: "#eee", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: 'center'}}>
+        <AppBar style={{backgroundColor: '#536DFE'}} title="Document Home" position="static" iconElementLeft={<IconButton><HomeIcon color={indigo100} /></IconButton>}>
+          <IconButton style={{marginTop: 8}}><SaveIcon color={indigo100}/></IconButton>
+          <IconButton  style={{marginTop: 8}}><ShareIcon color={indigo100}/></IconButton>
+          <IconButton onClick={() => this.logout()} style={{marginTop: 8}}><LogoutIcon color={indigo100} /></IconButton>
+        </AppBar>
        <div>
          <button className='btn' onMouseDown={(e) => this._onSaveClick(e)}>Save</button>
          <button className='btn' onMouseDown={(e) => this._onGoHomeClick(e)}>Doc Home</button><br/>
