@@ -54,6 +54,7 @@ function getBlockStyle(block) {
 class Document extends React.Component {
   constructor(props) {
     super(props);
+    // props.doc.content
     this.state = {
       editorState: EditorState.createEmpty(),
       activeFont: 'Open Sans'

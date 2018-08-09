@@ -19,7 +19,7 @@ class LoginForm extends React.Component {
     this.props.socket.emit('login', {user: login, pass: password}, (result) => {
       console.log('login result:', result);
       if(result.err == null && result.user) {
-        this.props.app.setState({user: result.user});
+        this.props.app.setState({user: result.user, mode: "docList"});
       }
     });
   };

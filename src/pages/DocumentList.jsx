@@ -44,12 +44,19 @@ export default class DocumentList extends Component {
     console.log('onchange', this.state)
     this.setState({
       [field]: e.target.value
-    })
+    });
   }
   onCreate = () => this.props.socket.emit('createDocument', {user: this.props.user , name: this.state.docName}, this.refresh)
   onJoin() {this.props.socket.emit('addDocumentCollaborator', {docId: this.state.docId, user: this.props.user}, this.refresh)}
-  deleteDoc(docId) { console.log('DELETE >>><<<'); this.props.socket.emit('deleteDocument', {docId}, this.refresh)}
-  editDoc = (docId) => () => this.props.navigate(Document, {docId})
+  deleteDoc(docId) {this.props.socket.emit('deleteDocument', {docId}, this.refresh)}
+  editDoc(doc) { 
+    console.log('JKJDSNSDFKDK', this.props.app.state.mode)
+    this.props.app.setState({mode: 'editor', currentViewDock: doc}, () =>  {
+      console.log('insidde', this.props.app.state.mode)
+    })
+    this.props.app.setState({mode: "editor"});
+    console.log('sdsdfdsfsfsd', this.props.app.state.mode)
+}
   tabChange = (tabValue) => () => this.setState({ tabValue })
   logout() { this.props.app.setState({user: null})}
 
@@ -96,7 +103,7 @@ export default class DocumentList extends Component {
                     </TableRowColumn>
                     <TableRowColumn>{doc._id}</TableRowColumn>
                     <TableRowColumn>
-                      <RaisedButton onClick={this.editDoc(doc._id)}>Edit</RaisedButton>
+                      <RaisedButton onClick={() => this.editDoc(doc)}>Edit</RaisedButton>
                       <RaisedButton onClick={() => this.deleteDoc(doc._id)}>Delete</RaisedButton>
                     </TableRowColumn>
                   </TableRow>

@@ -18,7 +18,7 @@ class RegistrationForm extends React.Component {
     this.props.socket.emit('register', {user: login, pass: password}, (result) => {
       console.log('register result:', result.err);
       if(result.err == null && result.user) {
-        this.props.app.setState({user: result.user});
+        this.props.app.setState({user: result.user, mode: "docList"});
       }
     });
   };

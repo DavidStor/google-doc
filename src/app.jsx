@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import LoginForm from './pages/LoginForm';
 import RegistrationForm from './pages/RegistrationForm';
 import DocumentList from './pages/DocumentList';
+import DocumentEdit from './pages/Document';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,7 +14,6 @@ export default class App extends React.Component {
       password: '',
       mode: 'login',
       user: null
-      documentOpened: ''
     }
     this.socket = io('http://localhost:1337');
     this.socket.on('connect', function(){console.log('ws connect')});
@@ -38,20 +38,15 @@ export default class App extends React.Component {
   //     }
   //   });
   // }
-  getDocument(doc){
-    this.setState({
-      documentOpened:doc
-    })
-  }
 
   render() {
-    if(this.state.user) {
+    if(this.state.mode ==  "docList") {
       return (
-        <div style={{height: "100%"}}><DocumentList docEditor={this.getDocument} user={this.state.user} socket={this.socket} app={this}/></div>
+        <div style={{height: "100%"}}><DocumentList  user={this.state.user} socket={this.socket} app={this}/></div>
       )
-    } else if (this.state.mode =='editor') {
+    } else if (this.state.mode == "editor") {
       return (
-      <div style={{height: "100%"}}><Document docEditor={this.getDocument} user={this.state.user} socket={this.socket} app={this}/></div>
+      <div style={{height: "100%"}}> <DocumentEdit doc={this.state.currentViewDock} socket={this.socket} app={this}/></div>
       )
     } else if(this.state.mode == "login") {
       return (
