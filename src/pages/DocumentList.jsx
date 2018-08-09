@@ -16,8 +16,8 @@ export default class DocumentList extends Component {
   state = {docs:[], tabValue: 2}
   
   loadDocuments = () => {
-    this.props.socket.emit('getDocuments', {}, (res) => {
-      if(res.err) return alert('Opps Error')
+    this.props.socket.emit('getDocuments', {user: this.props.user}, (res) => {
+      if(res.err) return alert('Error')
       this.setState({ docs: res.listDocs })
     })
   }
@@ -25,7 +25,7 @@ export default class DocumentList extends Component {
   refresh = (res) => {
     if(res.err){
     console.log(res.err);
-      return alert('Opps Error')
+      return alert('Error')
     } 
     this.loadDocuments() //TODO: just update the state not a full reload
     this.setState({tabValue: 2})

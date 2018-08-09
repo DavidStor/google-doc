@@ -35,35 +35,30 @@ io.on('connection', function (socket) {
     })
   });
 
-  socket.on('createNewDoc', function (data, next) {
-    console.log('new Doc REQUEST', data)
-    const {user, nameOfDoc} = data;
-
-    var newDoc = new Document({author: user, title: nameOfDoc, collabors: [user], content: '' }).save((err, doc) => {
-        if(doc) {
-            next({document: doc, err: err});
-        } else {
-            next({document: null, err: err});  
-        }
-    })
-  });
-
   socket.on('getDocuments', function (data, next) {
-    console.log('new Doc REQUEST', data)
+    console.log('new Doc REQUEST', data);
     const {user} = data;
     
-    Document.find({collabors: {$in:[user]} }).then(listDocs => next({listDocs}))
+    //look throuh the document that belong to the person
+    //Document.find({collaborators: {$in:[user]} }).then(listDocs => next({listDocs}))
   });
 
   socket.on('createDocument', function(data, next) {
     const {user, name} = data;
-    new Document({
+
+    var newDoc = new Document({
     author: user,
     collaborators: [user],
       editDate: Date.now(),
       title: name,
       content: ''
-    }).save((err, doc) => next({err, doc}))
+    });
+
+    newDoc.save((err, doc) => next({err, doc}));
+
+    User.findById(user , function(err, userObj) {
+        userObj.documents.push(newDoc)
+    });
   });
 });
 
