@@ -13,6 +13,7 @@ export default class App extends React.Component {
       password: '',
       mode: 'login',
       user: null
+      documentOpened: ''
     }
     this.socket = io('http://localhost:1337');
     this.socket.on('connect', function(){console.log('ws connect')});
@@ -24,7 +25,7 @@ export default class App extends React.Component {
   //     console.log('login result:', result);
   //     if(result.err == null && result.user) {
   //       this.setState({user: result.user});
-  //       //fix the result.user and figure out what it is and what is result 
+  //       //fix the result.user and figure out what it is and what is result
   //     }
   //   });
   // }
@@ -37,11 +38,20 @@ export default class App extends React.Component {
   //     }
   //   });
   // }
+  getDocument(doc){
+    this.setState({
+      documentOpened:doc
+    })
+  }
 
   render() {
     if(this.state.user) {
       return (
-        <div style={{height: "100%"}}><DocumentList user={this.state.user} socket={this.socket} app={this}/></div>
+        <div style={{height: "100%"}}><DocumentList docEditor={this.getDocument} user={this.state.user} socket={this.socket} app={this}/></div>
+      )
+    } else if (this.state.mode =='editor') {
+      return (
+      <div style={{height: "100%"}}><Document docEditor={this.getDocument} user={this.state.user} socket={this.socket} app={this}/></div>
       )
     } else if(this.state.mode == "login") {
       return (
