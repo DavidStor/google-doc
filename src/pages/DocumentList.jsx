@@ -23,7 +23,10 @@ export default class DocumentList extends Component {
   }
 
   refresh = (res) => {
-    if(res.err) return alert('Opps Error')
+    if(res.err){
+    console.log(res.err);
+      return alert('Opps Error')
+    } 
     this.loadDocuments() //TODO: just update the state not a full reload
     this.setState({tabValue: 2})
   }
@@ -38,7 +41,7 @@ export default class DocumentList extends Component {
   }
 
   onChange = (field) => (e) => this.setState({[field]: e.target.value})
-  onCreate = () => this.props.socket.emit('createDocument', {name: this.state.docName}, this.refresh)
+  onCreate = () => this.props.socket.emit('createDocument', {user: this.props.user , name: this.state.docName}, this.refresh)
   onJoin = () => this.props.socket.emit('addDocumentCollaborator', {docId: this.state.docId}, this.refresh)
   deleteDoc = (docId) => () => this.props.socket.emit('deleteDocument', {docId}, this.refresh)
   editDoc = (docId) => () => this.props.navigate(Document, {docId})

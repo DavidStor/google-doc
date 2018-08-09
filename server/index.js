@@ -56,15 +56,15 @@ io.on('connection', function (socket) {
   });
 
   socket.on('createDocument', function(data, next) {
-    const {user, nameOfDoc} = data;
+    const {user, name} = data;
     new Document({
-      author: user,
-      collaborators: [user],
+    author: user,
+    collaborators: [user],
       editDate: Date.now(),
-      name: data.name
+      title: name,
+      content: ''
     }).save((err, doc) => next({err, doc}))
-  })
-
+  });
 });
 
 server.listen(1337);

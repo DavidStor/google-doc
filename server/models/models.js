@@ -22,7 +22,7 @@ var documentSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User'
     },
-    collabors: [{
+    collaborators: [{
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     }],
