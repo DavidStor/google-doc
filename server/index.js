@@ -97,10 +97,10 @@ io.on('connection', function (socket) {
 
   socket.on('saveDoc', function(data, next) {
     const {docId , content} = data;
-    Document.findById( docId , function(err, doc) {
-        doc.content = content;
-        doc.save();
-        next({err});
+    Document.findById( docId , function(err, document) {
+        document.content = content;
+        document.save();
+        next({err, document});
     });
   });
 });

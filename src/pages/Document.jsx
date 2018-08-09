@@ -105,16 +105,14 @@ class Document extends React.Component {
 
 _onSaveClick(e){
   e.preventDefault();
-  // let contentState = this.state.editorState.getCurrentContent();
-  // let content = JSON.stringify(convertToRaw(contentState));
-  // console.log("content:",  content);
-
-  // this.socket.emit('saveDoc', {docId: this.state.document._id, content: content}, function(result){
-  //   if (result.err == null && result.document){
+  let contentState = this.state.editorState.getCurrentContent();
+  let content = JSON.stringify(convertToRaw(contentState));
+  this.props.socket.emit('saveDoc', {docId: this.props.doc._id, content: content}, function(result){
+    // if (result.err == null && result.document){
      
-  //     //this.setState({document: result.document}) // need to add a state variable
-  //   }
-  // })
+    //   //this.setState({document: result.document}) // need to add a state variable
+    // }
+  })
 }
 //   _onGoHomeClick(e){
 //     e.preventDefault(e)
