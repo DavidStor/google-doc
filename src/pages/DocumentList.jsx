@@ -40,9 +40,14 @@ export default class DocumentList extends Component {
     clearInterval(this.intervalHandle)
   }
 
-  onChange = (field) => (e) => this.setState({[field]: e.target.value})
+  onChange(field, e) { 
+    console.log('onchange', this.state)
+    this.setState({
+      [field]: e.target.value
+    })
+  }
   onCreate = () => this.props.socket.emit('createDocument', {user: this.props.user , name: this.state.docName}, this.refresh)
-  onJoin = () => this.props.socket.emit('addDocumentCollaborator', {docId: this.state.docId}, this.refresh)
+  onJoin() {this.props.socket.emit('addDocumentCollaborator', {docId: this.state.docId, user: this.props.user}, this.refresh)}
   deleteDoc(docId) { console.log('DELETE >>><<<'); this.props.socket.emit('deleteDocument', {docId}, this.refresh)}
   editDoc = (docId) => () => this.props.navigate(Document, {docId})
   tabChange = (tabValue) => () => this.setState({ tabValue })
@@ -60,13 +65,13 @@ export default class DocumentList extends Component {
       </AppBar>
 
       {tabValue === 0 && <div style={{padding:'20px'}}>
-        <TextField floatingLabelText="Document Name" onChange={this.onChange('docName')} value={this.state.docName}/><br/>
+        <TextField floatingLabelText="Document Name" onChange={(e) => this.onChange('docName', e)} value={this.state.docName}/><br/>
         <RaisedButton color="primary" onClick={this.onCreate}>Create</RaisedButton>
       </div>}
 
       {tabValue === 1 && <div style={{padding:'20px'}}>
-        <TextField floatingLabelText="Join Doc" onChange={this.onChange('docId')} value={this.state.docId}/><br/>
-        <RaisedButton color="primary" onClick={this.onJoin}>Join</RaisedButton>
+        <TextField floatingLabelText="Join Doc" onChange={(e) => this.onChange('docId', e)} value={this.state.docId}/><br/>
+        <RaisedButton color="primary" onClick={() => this.onJoin()}>Join</RaisedButton>
       </div>}
 
       {tabValue === 2 && <div style={{padding:'20px'}}>
@@ -87,7 +92,7 @@ export default class DocumentList extends Component {
                       {doc.title}
                     </TableRowColumn>
                     <TableRowColumn component="th" scope="row">
-                      {doc.author}
+                      {doc.author.username}
                     </TableRowColumn>
                     <TableRowColumn>{doc._id}</TableRowColumn>
                     <TableRowColumn>

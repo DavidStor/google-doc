@@ -41,7 +41,13 @@ io.on('connection', function (socket) {
     
     //look throuh the document that belong to the person
 
-   Document.find({collaborators: {$in:[user]} }).then(listDocs => next({listDocs}))
+   Document.find({collaborators: {$in:[user]} })
+   .populate('author')
+   .exec()
+   .then(listDocs => {
+       console.log('docs', listDocs)
+       next({listDocs})
+    })
   });
 
   socket.on('createDocument', function(data, next) {
@@ -68,6 +74,15 @@ io.on('connection', function (socket) {
           if(err) {
               console.log(err);
           }
+      });
+  });
+
+  socket.on('addDocumentCollaborator', function(data, next) {
+      const {docId , user} = data;
+      Document.findById( docId , function(err, doc) {
+          doc.collaborators.push(user);
+          doc.save();
+          next({err});
       });
   });
 });

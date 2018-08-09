@@ -34,7 +34,7 @@ class LoginForm extends React.Component {
         {/* <AppBar title="Login"/> */}
           <Paper zDepth={2}>
             <AppBar title="Login" style={{backgroundColor: "#536dfe", fontFamily: "Trebuchet MS"}}/>
-            <div style={{padding: 30}}>
+            <div style={{padding: "30px"}}>
           <TextField
             hintText="Username"
             onChange={(e) => this.setState({login: e.target.value})}
