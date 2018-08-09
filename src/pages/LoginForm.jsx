@@ -33,7 +33,7 @@ class LoginForm extends React.Component {
       <div style={{height: "100%", width: "100%", backgroundColor: "#eee",  display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
         {/* <AppBar title="Login"/> */}
           <Paper zDepth={2}>
-            <AppBar title="Login" style={{backgroundColor: "#536dfe", fontFamily: "Segoe UI"}}/>
+            <AppBar title="Login" style={{backgroundColor: "#536dfe", fontFamily: "Trebuchet MS"}}/>
             <div style={{padding: 30}}>
           <TextField
             hintText="Username"
@@ -43,6 +43,7 @@ class LoginForm extends React.Component {
         <br/>
           <TextField
             hintText="Password"
+            type="password"
             onChange={(e) => this.setState({password: e.target.value})}
             style={{fontFamily: "Trebuchet MS"}}
           />

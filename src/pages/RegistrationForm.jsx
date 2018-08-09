@@ -31,7 +31,7 @@ class RegistrationForm extends React.Component {
     return (
       <div style={{height: "100%", width: "100%", backgroundColor: "#eee",  display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
           <Paper zDepth={2}>
-            <AppBar title="Register" style={{backgroundColor: "#ed2f07", fontFamily: "Segoe UI"}}/>
+            <AppBar title="Register" style={{backgroundColor: "#ed2f07", fontFamily: "Trebuchet MS"}}/>
             <div style={{padding: 30}}>
           <TextField
             hintText="Username"
@@ -41,8 +41,9 @@ class RegistrationForm extends React.Component {
         <br/>
           <TextField
             hintText="Password"
+            type="password"
             onChange={(e) => this.setState({password: e.target.value})}
-            style={{fontFamily: "Trebuchet MS"}}
+            style={{fontFamily: "Trebuchet MS", borderColor: "blue"}}
           />
           <br/>
           <div style={{display: "flex", justifyContent: "center"}}>
