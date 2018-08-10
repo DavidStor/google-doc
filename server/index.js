@@ -103,6 +103,13 @@ io.on('connection', function (socket) {
         next({err, document});
     });
   });
+  socket.on('join', function(room) {
+    socket.join(room);
+    });
+
+  socket.on('edit', function({room, content}){
+    socket.to(room).emit('change', content)
+    });
 });
 
 server.listen(1337);

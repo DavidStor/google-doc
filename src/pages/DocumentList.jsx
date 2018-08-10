@@ -53,6 +53,7 @@ export default class DocumentList extends Component {
   deleteDoc(docId) {this.props.socket.emit('deleteDocument', {docId}, this.refresh)}
   editDoc(doc) {
     this.props.socket.emit('loadDoc', {docId: doc._id }, (data) => {
+      this.props.socket.emit('join', doc._id);
       this.props.app.setState({mode: 'editor', currentViewDock: data.document});
     });
 

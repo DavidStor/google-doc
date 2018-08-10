@@ -76,7 +76,17 @@ class Document extends React.Component {
       showColor: false,
       anchorEl: null
     };
-    this.onChange = (editorState) => { this.setState({editorState, showColor: false, showFondPop: false, anchorEl: null,})};
+    this.props.socket.on('change', (data) => {
+      this.setState({editorState: EditorState.createWithContent(convertFromRaw(data))})
+    });
+    this.onChange = (editorState) => {
+       this.setState({editorState, showColor: false, showFondPop: false, anchorEl: null,} , () => {
+         let contentState = editorState.getCurrentContent();
+       let content = convertToRaw(contentState);
+       this.props.socket.emit('edit', {room: props.doc._id, content: content});
+       })
+       
+    };
   }
 
   _onBoldClick(e) {
@@ -144,10 +154,6 @@ _onHomeClick(e) {
 });
   this.props.app.setState({mode: 'docList'});
 }
-//   _onGoHomeClick(e){
-//     e.preventDefault(e)
-//     // render document home page
-//   }
 
   render() {
     return (
