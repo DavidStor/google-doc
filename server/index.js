@@ -87,9 +87,11 @@ io.on('connection', function (socket) {
   });
 
   socket.on('loadDoc', function (data, next) {
-    console.log('new Doc REQUEST', data);
+    console.log('load Doc REQUEST', data);
     const {docId} = data;
-
+            /*
+        TO-DO after changing the one below u don't have to make this
+        */
    Document.findById(docId , function(err, document) {
     next({err, document})
    });
@@ -105,6 +107,9 @@ io.on('connection', function (socket) {
   });
   socket.on('join', function(room) {
     socket.join(room);
+    /*TO-DO when the user joins emit the edit request so that the socket gets the most
+    recent version of the socket 
+    */
     });
 
   socket.on('edit', function({room, content}){
