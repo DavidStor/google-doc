@@ -15,7 +15,7 @@ export default class App extends React.Component {
       mode: 'login',
       user: null
     }
-    this.socket = io('http://localhost:1337');
+    this.socket = io('https://blooming-meadow-88716.herokuapp.com');
     this.socket.on('connect', function(){console.log('ws connect')});
     this.socket.on('disconnect', function(){console.log('ws disconnect')});
   }
