@@ -10,11 +10,13 @@ import TextField from 'material-ui/TextField'
 import {indigo100} from 'material-ui/styles/colors'
 import {Table, TableRow, TableBody, TableHeader, TableHeaderColumn, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton'
-import {Document} from './Document'
+import {Document} from './Document';
+import Dialog from 'material-ui/Dialog';
+
 
 export default class DocumentList extends Component {
-  state = {docs:[], tabValue: 2}
-  
+  state = {docs:[], tabValue: 2, open: true}
+
   loadDocuments = () => {
     this.props.socket.emit('getDocuments', {user: this.props.user}, (res) => {
       if(res.err) return alert('Error')
@@ -26,7 +28,7 @@ export default class DocumentList extends Component {
     if(res.err){
     console.log(res.err);
       return alert('Error')
-    } 
+    }
     this.loadDocuments() //TODO: just update the state not a full reload
     this.setState({tabValue: 2})
   }
@@ -40,7 +42,7 @@ export default class DocumentList extends Component {
     clearInterval(this.intervalHandle)
   }
 
-  onChange(field, e) { 
+  onChange(field, e) {
     console.log('onchange', this.state)
     this.setState({
       [field]: e.target.value
@@ -49,19 +51,29 @@ export default class DocumentList extends Component {
   onCreate = () => this.props.socket.emit('createDocument', {user: this.props.user , name: this.state.docName}, this.refresh)
   onJoin() {this.props.socket.emit('addDocumentCollaborator', {docId: this.state.docId, user: this.props.user}, this.refresh)}
   deleteDoc(docId) {this.props.socket.emit('deleteDocument', {docId}, this.refresh)}
-  editDoc(doc) { 
+  editDoc(doc) {
     this.props.socket.emit('loadDoc', {docId: doc._id }, (data) => {
       this.props.app.setState({mode: 'editor', currentViewDock: data.document});
     });
-    
+
 }
   tabChange = (tabValue) => () => this.setState({ tabValue })
   logout() { this.props.app.setState({user: null})}
+  handleOpen = () => {
+  this.setState({open: true});
+};
 
   render() {
-    const {tabValue, docs} = this.state
+    const {tabValue, docs} = this.state;
+    const actions = [
+      <RaisedButton label="Create" primary={true} keyboardFocused={true} onClick={this.onCreate}/>,
+      <RaisedButton label="Cancel" onClick={this.tabChange(2)}/>,
+    ];
+    const actions2 = [
+      <RaisedButton label="Join" primary={true} keyboardFocused={true} onClick={() => this.onJoin()}/>,
+      <RaisedButton label="Cancel" onClick={this.tabChange(2)}/>,
+    ];
     return (<div>
-
       <AppBar style={{backgroundColor: '#536DFE'}} title="Document Home" position="static" iconElementLeft={<IconButton onClick={this.tabChange(2)}><HomeIcon color={indigo100} /></IconButton>}>
         <IconButton onClick={this.tabChange(0)} style={{marginTop: 8}}><AddIcon color={indigo100}/></IconButton>
         <IconButton onClick={this.tabChange(1)} style={{marginTop: 8}}><JoinIcon color={indigo100}/></IconButton>
@@ -69,14 +81,28 @@ export default class DocumentList extends Component {
         <IconButton onClick={() => this.logout()} style={{marginTop: 8}}><LogoutIcon color={indigo100} /></IconButton>
       </AppBar>
 
-      {tabValue === 0 && <div style={{padding:'20px'}}>
-        <TextField floatingLabelText="Document Name" onChange={(e) => this.onChange('docName', e)} value={this.state.docName}/><br/>
-        <RaisedButton color="primary" onClick={this.onCreate}>Create</RaisedButton>
+      {tabValue === 0 && <div>
+        <Dialog
+          title="Create Document"
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={() => this.setState({open: false})}
+        >
+          <TextField floatingLabelText="Document Title" onChange={(e) => this.onChange('docName', e)} value={this.state.docName}/><br/>
+        </Dialog>
       </div>}
 
-      {tabValue === 1 && <div style={{padding:'20px'}}>
-        <TextField floatingLabelText="Join Doc" onChange={(e) => this.onChange('docId', e)} value={this.state.docId}/><br/>
-        <RaisedButton color="primary" onClick={() => this.onJoin()}>Join</RaisedButton>
+      {tabValue === 1 && <div>
+        <Dialog
+          title="Join Document"
+          actions={actions2}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={() => this.setState({open: false})}
+        >
+          <TextField floatingLabelText="Document ID" onChange={(e) => this.onChange('docId', e)} value={this.state.docId}/><br/>
+        </Dialog>
       </div>}
 
       {tabValue === 2 && <div style={{padding:'20px'}}>
