@@ -25,8 +25,7 @@ import io from 'socket.io-client';
 import {indigo900, indigo100} from 'material-ui/styles/colors'
 import FontPicker from 'font-picker-react';
 import Paper from 'material-ui/Paper';
-
-
+// import * as Scroll from 'react-scroll';
 /* Define custom styles */
 const customStyleMap = {
   selection0: {
@@ -40,7 +39,6 @@ const customStyleMap = {
   selection2: {
     borderLeft: 'solid 20px green',
     backgroundColor: 'rgba(40,50,255,.5)',
-    fontSize: '80px',
   },
 };
 
@@ -71,13 +69,14 @@ class Document extends React.Component {
     super(props);
     // props.doc.content
     this.state = {
-      editorState: EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.doc.content))),
+      //editorState: EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.doc.content))),
+      editorState: this.props.doc.content? EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.doc.content))) : EditorState.createEmpty(),
       activeFont: 'Open Sans',
       showFondPop: false,
       showColor: false,
       anchorEl: null
     };
-    this.onChange = (editorState) => { this.setState({editorState})};
+    this.onChange = (editorState) => { this.setState({editorState, showColor: false, showFondPop: false, anchorEl: null,})};
   }
 
   _onBoldClick(e) {
@@ -153,7 +152,7 @@ _onHomeClick(e) {
   render() {
     return (
       <div style={{backgroundColor: "#eee", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: 'center'}}>
-        <AppBar style={{backgroundColor: '#536DFE'}} title="Document Home" position="static" iconElementLeft={<IconButton>
+        <AppBar style={{backgroundColor: '#536DFE'}} title={this.props.doc.title} position="static" iconElementLeft={<IconButton>
           <HomeIcon color={indigo100} onClick={(e) => this._onHomeClick(e)} /></IconButton>}>
           <IconButton style={{marginTop: 8}}><SaveIcon onClick={(e) => this._onSaveClick(e)} color={indigo100}/></IconButton>
           <IconButton  style={{marginTop: 8}}><ShareIcon color={indigo100}/></IconButton>
@@ -218,7 +217,7 @@ _onHomeClick(e) {
                 onChange={nextFont => this.setState({ activeFont: nextFont.family })}
             />
          </div>
-      <Paper style={{height: 850, width: 1000, margin: 20, padding: 40}} zDepth={2}>
+      <Paper style={{maxHeight: "100%", width: 900, height: 800, margin: 20, padding: 40}} zDepth={2}>
         <div className="apply-font" style={{fontSize: 50}}>
           <Editor
             className="apply-font"
